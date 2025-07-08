@@ -13,28 +13,11 @@ export class PostgresDataService {
         this.db = new DatabaseService(connection);
     }
 
-    async loadAllVariableData() {
+    async loadAllData() {
         const [
             farmsData,
             varietiesData,
             productsData,
-        ] = await Promise.all([
-            this.db.query('SELECT "Farm" FROM public.global_farms ORDER BY "Index" ASC'),
-            this.db.query('SELECT variety FROM public.global_varieties ORDER BY index ASC'),
-            this.db.query(`SELECT "ProductCode" FROM public.product_details WHERE "Grade" = 1 
-                AND "ProductCode" <> 'KF' AND "ProductCode" <> 'JF' ORDER BY "Index" ASC`),
-        ]);
-
-        return {
-            farms: farmsData.map(f => ({ farm: f.Farm })) as Farm[],
-            varieties: varietiesData as Variety[],
-            products: productsData.map(p => ({ productcode: p.ProductCode })) as Product[],
-        };
-    }
-
-    async loadAllWeeklyData() {
-        const [
-            variableData,
             summaryChartData,
             summaryTableDollarData,
             summaryTableCasesData,
@@ -44,7 +27,10 @@ export class PostgresDataService {
             productTableCasesData,
             varietyTablePoundsData,
         ] = await Promise.all([
-            this.loadAllVariableData(),
+            this.db.query('SELECT "Farm" FROM public.global_farms ORDER BY "Index" ASC'),
+            this.db.query('SELECT variety FROM public.global_varieties ORDER BY index ASC'),
+            this.db.query(`SELECT "ProductCode" FROM public.product_details WHERE "Grade" = 1 
+                AND "ProductCode" <> 'KF' AND "ProductCode" <> 'JF' ORDER BY "Index" ASC`),
             this.db.query(`SELECT * FROM public.sales_budget_weekly_summary_chart_dollars_cases 
                 ORDER BY "ISOYear" Desc, "DataLabel" Desc, "ISOWeek"`),
             this.db.query('SELECT * FROM public.sales_budget_weekly_summary_table_dollars'),
@@ -58,7 +44,9 @@ export class PostgresDataService {
         ]);
 
         return {
-            ...variableData,
+            farms: farmsData.map(f => ({ farm: f.Farm })) as Farm[],
+            varieties: varietiesData as Variety[],
+            products: productsData.map(p => ({ productcode: p.ProductCode })) as Product[],
             summaryChartDollarsCases: summaryChartData,
             summaryTableDollar: summaryTableDollarData,
             summaryTableCases: summaryTableCasesData,
@@ -72,7 +60,9 @@ export class PostgresDataService {
 
     async loadAllMonthlyData() {
         const [
-            variableData,
+            farmsData,
+            varietiesData,
+            productsData,
             summaryChartData,
             summaryTableDollarData,
             summaryTableCasesData,
@@ -82,7 +72,10 @@ export class PostgresDataService {
             productTableCasesData,
             varietyTablePoundsData,
         ] = await Promise.all([
-            this.loadAllVariableData(),
+            this.db.query('SELECT "Farm" FROM public.global_farms ORDER BY "Index" ASC'),
+            this.db.query('SELECT variety FROM public.global_varieties ORDER BY index ASC'),
+            this.db.query(`SELECT "ProductCode" FROM public.product_details WHERE "Grade" = 1 
+                AND "ProductCode" <> 'KF' AND "ProductCode" <> 'JF' ORDER BY "Index" ASC`),
             this.db.query(`SELECT * FROM public.sales_budget_monthly_summary_chart_dollars_cases 
                 ORDER BY "Year" Desc, "DataLabel" Desc, "Month"`),
             this.db.query(`SELECT * FROM public.sales_budget_monthly_summary_table_dollars`),
@@ -97,7 +90,9 @@ export class PostgresDataService {
         ]);
 
         return {
-            ...variableData,
+            farms: farmsData.map(f => ({ farm: f.Farm })) as Farm[],
+            varieties: varietiesData as Variety[],
+            products: productsData.map(p => ({ productcode: p.ProductCode })) as Product[],
             summaryChartDollarsCases: summaryChartData,
             summaryTableDollar: summaryTableDollarData,
             summaryTableCases: summaryTableCasesData,
@@ -107,11 +102,6 @@ export class PostgresDataService {
             productTableCases: productTableCasesData,
             varietyTablePounds: varietyTablePoundsData,
         };
-    }
-
-    // Legacy method for backward compatibility - can be removed once all references are updated
-    async loadAllData() {
-        return this.loadAllWeeklyData();
     }
 
     // Generic query method for custom queries on other pages

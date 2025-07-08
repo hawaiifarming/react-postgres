@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SalesLineChart from '../components/SalesLineChart';
 import SalesTable from '../components/SalesTable';
+import PageHeader from '../components/PageHeader';
 import ChartGrid from '../components/ChartGrid';
 import TableStack from '../components/TableStack';
 import { usePostgresData } from '../hooks/useDatabase';
@@ -93,7 +94,10 @@ const MonthlyBudget: React.FC = () => {
   } = data;
 
   return (
-    <div className="page-content">
+    <PageHeader 
+      title="Monthly Budget" 
+      subtitle=""
+    >
       {/* Summary Charts - Dollars & Cases */}
       <ChartGrid columns={3}>
         {metrics.map(m =>
@@ -170,7 +174,7 @@ const MonthlyBudget: React.FC = () => {
           />
         ))}
       </TableStack>
-    </div>
+    </PageHeader>
   );
 };
 

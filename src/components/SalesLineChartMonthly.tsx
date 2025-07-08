@@ -2,7 +2,7 @@ import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import type { ChartData } from '../types';
 
-interface SalesLineChartProps {
+interface SalesLineChartMonthlyProps {
   data: ChartData[];
   x: string;
   y: string;
@@ -10,7 +10,7 @@ interface SalesLineChartProps {
   title: string;
 }
 
-const SalesLineChart: React.FC<SalesLineChartProps> = ({
+const SalesLineChartMonthly: React.FC<SalesLineChartMonthlyProps> = ({
   data,
   x,
   y,
@@ -37,10 +37,6 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
 
   // Transform data for ECharts
   const chartOptions = React.useMemo(() => {
-    // Detect if this is monthly or weekly data based on x field name
-    const isMonthlyData = x === 'Month';
-    const isWeeklyData = x === 'ISOWeek';
-
     // Get all CSS values once
     const rootStyles = getComputedStyle(document.documentElement);
     const chartColors = [
@@ -92,16 +88,11 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
       return Math.round(value).toLocaleString();
     };
 
-    // Convert ISO week to MM/DD format
-    const getDateFromWeek = (week: number, year: number = 2025) => {
-      const jan4 = new Date(year, 0, 4);
-      const jan4Day = jan4.getDay() || 7; // Sunday = 0, but we want Monday = 1
-      const weekStart = new Date(jan4);
-      weekStart.setDate(jan4.getDate() - jan4Day + 1 + (week - 1) * 7);
-      
-      const month = weekStart.getMonth() + 1;
-      const day = weekStart.getDate();
-      return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
+    // Convert month number to short month name
+    const getMonthName = (month: number) => {
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return monthNames[month - 1] || month.toString();
     };
 
     const seriesConfig = seriesOrder.map((seriesName, index) => {
@@ -162,20 +153,11 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
         formatter: (params: any) => {
           if (!params || params.length === 0) return '';
           
-          let headerText = '';
-          if (isWeeklyData) {
-            const weekNumber = parseInt(params[0].axisValue);
-            const dateStr = getDateFromWeek(weekNumber);
-            headerText = `Week ${weekNumber} (${dateStr})`;
-          } else if (isMonthlyData) {
-            const monthNumber = parseInt(params[0].axisValue);
-            headerText = `Month ${monthNumber}`;
-          } else {
-            headerText = params[0].axisValue;
-          }
+          const monthNumber = parseInt(params[0].axisValue);
+          const monthName = getMonthName(monthNumber);
           
           // Create header
-          let result = `<div class="tooltip-header">${headerText}</div>`;
+          let result = `<div class="tooltip-header">${monthName} 2025</div>`;
           
           // Create aligned data rows using CSS classes
           params.forEach((param: any) => {
@@ -224,24 +206,20 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
         axisLabel: {
           color: axisColor,
           fontSize: 11,
-          interval: (_index: number, value: string) => {
-            if (isMonthlyData) {
-              // For monthly data, show all months (1-12) - always return true
-              return true;
-            } else if (isWeeklyData) {
-              // For weekly data, use responsive intervals
-              const num = parseInt(value);
-              if (isSmallScreen) {
-                // Small screen: start at 4, then increment by 8 (4, 12, 20, 28, 36, 44, 52)
-                return num === 52 || (num >= 4 && (num - 4) % 8 === 0 && num <= 52);
-              } else {
-                // Large screen: start at 1, then increment by 4 (1, 4, 8, 12, 16, 20, etc.)
-                return num === 1 || num === 52 || (num % 4 === 0 && num <= 52);
-              }
-            }
-            return true; // Default: show all
+          formatter: (value: string) => {
+            const monthNum = parseInt(value);
+            return getMonthName(monthNum);
           },
-          formatter: undefined, // Show numbers as-is for both weekly and monthly
+          interval: (_index: number, value: string) => {
+            const num = parseInt(value);
+            if (isSmallScreen) {
+              // Small screen: show every other month (2, 4, 6, 8, 10, 12)
+              return num % 2 === 0 && num <= 12;
+            } else {
+              // Large screen: show all months (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+              return num >= 1 && num <= 12;
+            }
+          },
         },
         axisTick: {
           show: false,
@@ -271,7 +249,7 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
       },
       series: seriesConfig,
     };
-  }, [data, x, y, series, title, isSmallScreen]); // Added isSmallScreen to dependency array
+  }, [data, x, y, series, title, isSmallScreen]);
 
   return (
     <div className="card">
@@ -286,4 +264,4 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
   );
 };
 
-export default SalesLineChart;
+export default SalesLineChartMonthly;

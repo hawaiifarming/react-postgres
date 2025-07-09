@@ -60,6 +60,9 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
     const axisColor = rootStyles.getPropertyValue('--chart-axis-color').trim();
     const gridColor = rootStyles.getPropertyValue('--chart-grid-color').trim();
     const legendColor = rootStyles.getPropertyValue('--chart-legend-color').trim();
+    const legendSize = parseInt(rootStyles.getPropertyValue('--chart-legend-size').trim());
+    const legendSpacing = parseInt(rootStyles.getPropertyValue('--chart-legend-spacing').trim());
+    const legendIconSize = parseInt(rootStyles.getPropertyValue('--chart-legend-icon-size').trim());
     
     // Group data by series and preserve backend order
     const seriesData = new Map<string, { [key: string]: any }[]>();
@@ -202,9 +205,13 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
         left: 'center',
         textStyle: {
           color: legendColor,
-          fontSize: 12,
+          fontSize: legendSize,
         },
-        icon: 'circle'
+        icon: 'circle',
+        itemGap: legendSpacing, // Space between legend items
+        symbolKeepAspect: true,
+        itemWidth: legendIconSize, // Responsive size of the legend symbol (circle)
+        itemHeight: legendIconSize // Responsive size of the legend symbol (circle)
       },
       grid: {
         left: rootStyles.getPropertyValue('--chart-grid-left').trim(),

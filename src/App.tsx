@@ -47,11 +47,7 @@ function AppContent() {
           alignItems: 'center'
         }}>
           {/* Logo and Title */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem'
-          }}>
+          <div className="header-logo-container">
             <div style={{
               backgroundColor: 'white',
               borderRadius: '50%',
@@ -63,18 +59,10 @@ function AppContent() {
               <img 
                 src="/hflogo.png" 
                 alt="Logo" 
-                style={{
-                  height: '32px',
-                  width: 'auto'
-                }}
+                className="header-logo"
               />
             </div>
-            <h1 style={{
-              color: 'white',
-              margin: 0,
-              fontSize: '1.5rem',
-              fontWeight: 'bold'
-            }}>
+            <h1 className="header-title">
               {getPageTitle()}
             </h1>
           </div>

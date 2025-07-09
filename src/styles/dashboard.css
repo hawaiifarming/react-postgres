@@ -473,18 +473,20 @@ body {
 /* Chart Styling Configuration */
 :root {
   --chart-title-color: #374151;
-  --chart-title-size: 16px;
+  --chart-title-size: 16px; /* Desktop default */
   --chart-title-weight: 600;
   --chart-bg-color: #fff;
   --chart-border-color: #e5e7eb;
   --chart-text-color: #374151;
   --chart-text-size: 12px;
-  --chart-axis-color: #9ca3af;
+  --chart-axis-color: #000000; /* Changed from gray to black for better readability */
   --chart-axis-size: 11px;
   --chart-grid-color: #d1d5db;
   --chart-pointer-color: #d1d5db;
   --chart-legend-color: #374151;
-  --chart-legend-size: 12px;
+  --chart-legend-size: 14px; /* Desktop default - increased from 12px */
+  --chart-legend-spacing: 12px; /* Space between legend icon and text - increased from 8px */
+  --chart-legend-icon-size: 10px; /* Desktop default - size of legend dots/circles */
   
   /* Chart Colors - Complete palette */
   --chart-color-1: #ef4444; /* red-500 - Bdgt25 */
@@ -502,6 +504,43 @@ body {
   --chart-grid-top: 80px;
   --chart-grid-bottom: 40px;
   --chart-animation-duration: 750ms;
+}
+
+/* Responsive Chart Title Sizes */
+@media (max-width: 1024px) {
+  :root {
+    --chart-title-size: 15px; /* Tablets */
+    --chart-legend-size: 13px; /* Slightly smaller legend on tablets - increased from 11px */
+    --chart-legend-spacing: 16px; /* Slightly tighter spacing on tablets - increased from 7px */
+    --chart-legend-icon-size: 16px; /* Slightly smaller dots on tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --chart-title-size: 14px; /* Medium phones */
+    --chart-legend-size: 13px; /* Larger legend on medium phones for better visibility */
+    --chart-legend-spacing: 14px; /* More spacing on medium phones for better readability */
+    --chart-legend-icon-size: 14px; /* Larger dots on medium phones */
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --chart-title-size: 13px; /* Small phones */
+    --chart-legend-size: 13px; /* Increased from 12px for better mobile visibility */
+    --chart-legend-spacing: 10px; /* Increased from 8px for better spacing */
+    --chart-legend-icon-size: 10px; /* Increased from 9px for better visibility */
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --chart-title-size: 12px; /* Very small phones */
+    --chart-legend-size: 12px; /* Increased from 11px for better mobile visibility */
+    --chart-legend-spacing: 8px; /* Increased from 6px for better spacing */
+    --chart-legend-icon-size: 8px; /* Increased from 8px for better visibility */
+  }
 }
 
 /* Complete Chart Style Configuration Class */
@@ -712,6 +751,75 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
+}
+
+/* Responsive Header Title */
+.header-title {
+  color: white;
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.5rem; /* Desktop default */
+}
+
+@media (max-width: 1024px) {
+  .header-title {
+    font-size: 1.375rem; /* Slightly smaller on tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.25rem; /* Medium phones */
+  }
+}
+
+@media (max-width: 640px) {
+  .header-title {
+    font-size: 1.125rem; /* Small phones */
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 1rem; /* Very small phones */
+  }
+}
+
+/* Responsive Logo and Header Container */
+.header-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .header-logo-container {
+    gap: 0.75rem; /* Reduce gap on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo-container {
+    gap: 0.5rem; /* Further reduce gap on very small screens */
+  }
+}
+
+/* Responsive Logo Size */
+.header-logo {
+  height: 32px;
+  width: auto;
+}
+
+@media (max-width: 640px) {
+  .header-logo {
+    height: 28px; /* Slightly smaller logo on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo {
+    height: 24px; /* Even smaller logo on very small screens */
+  }
 }
 
 .header-content {

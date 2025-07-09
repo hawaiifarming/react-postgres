@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WeeklyBudget from './pages/WeeklyBudget';
 import MonthlyBudget from './pages/MonthlyBudget';
 import './styles/dashboard.css';
@@ -27,6 +27,11 @@ function AppContent() {
         return 'Sales Dashboard';
     }
   };
+
+  // Update document title when route changes
+  useEffect(() => {
+    document.title = `${getPageTitle()} - Dashboard`;
+  }, [location.pathname]);
 
   return (
     <>

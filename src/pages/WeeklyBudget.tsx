@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SalesLineChart from '../components/SalesLineChart';
 import SalesTable from '../components/SalesTable';
-import PageHeader from '../components/PageHeader';
 import ChartGrid from '../components/ChartGrid';
 import TableStack from '../components/TableStack';
 import { usePostgresData } from '../hooks/useDatabase';
@@ -23,7 +22,7 @@ const WeeklyBudget: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        const weeklyData = await service.loadAllData();
+        const weeklyData = await service.loadAllWeeklyData();
         setData(weeklyData);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Unknown error'));
@@ -94,11 +93,10 @@ const WeeklyBudget: React.FC = () => {
   } = data;
 
   return (
-    <PageHeader 
-      title="Weekly Budget" 
-      subtitle=""
-    >
-      {/* Summary Charts - Dollars & Cases */}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto container-padding">
+        <div className="content-wrapper">
+          {/* Summary Charts - Dollars & Cases */}
       <ChartGrid columns={3}>
         {metrics.map(m =>
           farms.map((f: any) => (
@@ -174,7 +172,9 @@ const WeeklyBudget: React.FC = () => {
           />
         ))}
       </TableStack>
-    </PageHeader>
+        </div>
+      </div>
+    </div>
   );
 };
 

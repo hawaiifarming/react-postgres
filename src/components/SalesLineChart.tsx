@@ -236,7 +236,7 @@ const SalesLineChart: React.FC<SalesLineChartProps> = ({
                 return num === 52 || (num >= 4 && (num - 4) % 8 === 0 && num <= 52);
               } else {
                 // Large screen: start at 1, then increment by 4 (1, 4, 8, 12, 16, 20, etc.)
-                return num === 1 || num === 52 || (num % 4 === 0 && num <= 52);
+                return num === 0 || num === 52 || (num % 4 === 0 && num <= 52);
               }
             }
             return true; // Default: show all

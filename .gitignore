@@ -17,13 +17,11 @@ dist-ssr
 .env.local
 .env.production
 .env.development
-backend/.env
-backend/.env.local
-backend/.env.production
 
-# Database connection files (if any)
+# Database connection files 
 database.config.js
 database.config.ts
+src/config/database.ts
 
 # Editor directories and files
 .vscode/*
@@ -46,3 +44,9 @@ coverage/
 # OS generated files
 Thumbs.db
 ehthumbs.db
+
+# Development and testing
+*.test.js
+*.test.ts
+*.spec.js  
+*.spec.ts

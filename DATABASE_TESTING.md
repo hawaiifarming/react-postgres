@@ -2,51 +2,52 @@
 
 ## Overview
 
-This guide explains how to test database connections in your React PostgreSQL dashboard application. The app provides both simulated testing (for browser compatibility) and guidance for real database testing.
+This guide explains how to test and validate PostgreSQL database connections in your React dashboard application.
 
-## Current Testing Implementation
+## Current Implementation
 
-### 🧪 **Simulated Connection Testing**
+### Database Configuration Testing
 
-The current implementation uses a sophisticated simulation that:
+The application uses a production-ready PostgreSQL connection system:
 
-1. **Validates Connection Parameters**
-   - Checks required fields (host, database, user)
-   - Validates port ranges (1-65535)
-   - Performs basic host format validation
+1. **Connection Configuration** (`src/config/database.ts`)
+   - Manages database connection parameters
+   - Supports multiple connection profiles
+   - Type-safe connection definitions
 
-2. **Simulates Real Connection Scenarios**
-   - Success with latency measurements
-   - Authentication failures
-   - Connection timeouts
-   - Database not found errors
-   - Network connectivity issues
+2. **Connection Validation**
+   - Database service validates connections before queries
+   - Error handling for connection failures
+   - Proper timeout and retry logic
 
-3. **Special Handling for Your Production Host**
-   - Your host `34.59.102.227` is configured to simulate successful connections
-   - Shows realistic PostgreSQL version info
-   - Displays connection latency
+3. **Data Service Testing**
+   - `PostgresDataService` handles all database operations
+   - Validates data structure and types
+   - Graceful error handling for missing views/tables
 
-### 🔍 **How to Test Your Connection**
+### 🔍 **How to Test Your Database**
 
-1. **Navigate to Database Connections**
-   - Go to `http://localhost:5175/connections`
-   - You should see your "PostgreSQL Views" connection
+1. **Verify Configuration**
+   - Check `src/config/database.ts` has correct connection details
+   - Ensure all required PostgreSQL views/tables exist
+   - Validate user permissions for database access
 
-2. **Click the Test Button**
-   - Click the test tube icon (🧪) next to your connection
-   - The button will show a spinning clock while testing
-   - Results appear in both an alert dialog and a status indicator
+2. **Test Data Loading**
+   - Navigate to Weekly Budget: `http://localhost:5175/`
+   - Navigate to Monthly Budget: `http://localhost:5175/monthly`
+   - Check browser console for any connection errors
 
-3. **Interpret Results**
-   - ✅ **Success**: Green status with server version and latency
-   - ❌ **Failure**: Red status with specific error message
+3. **Monitor Network Requests**
+   - Open browser Developer Tools (F12)
+   - Go to Network tab
+   - Look for successful database queries
+   - Verify data is loading correctly
 
-## Real Database Testing
+## Required Database Objects
 
-### 🔧 **For Production Use**
+### Expected Views and Tables
 
-To implement real database testing, you have several options:
+Your PostgreSQL database should contain:
 
 #### Option 1: Backend API Endpoint
 Create a backend service that tests connections server-side:

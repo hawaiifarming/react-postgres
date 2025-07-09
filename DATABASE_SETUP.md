@@ -6,27 +6,36 @@ This guide will help you set up the PostgreSQL database for the React PostgreSQL
 
 - PostgreSQL server running (local or remote)
 - Node.js and npm installed
-- Database connection details configured in `.env` file
+- Database connection details configured in `src/config/database.ts`
 
 ## Setup Steps
 
 ### 1. Configure Database Connection
 
-Copy the `.env.example` file to `.env` and update with your database credentials:
+Update your database connection in `src/config/database.ts`:
 
-```bash
-cp .env.example .env
+```typescript
+export const getConnection = (name: string): DatabaseConnection | null => {
+  const connections: { [key: string]: DatabaseConnection } = {
+    postgres_views: {
+      id: 'postgres_views',
+      name: 'PostgreSQL Views',
+      type: 'postgres',
+      host: 'your_host',
+      port: 5432,
+      database: 'your_database', 
+      username: 'your_username',
+      password: 'your_password',
+      ssl: false
+    }
+  };
+  return connections[name] || null;
+};
 ```
 
-Edit `.env` with your database details:
-```env
-DB_HOST=your_host
-DB_PORT=5432
-DB_NAME=your_database
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_SSL=false
-```
+### 2. Required Database Views and Tables
+
+The application expects the following PostgreSQL views/tables to exist:
 
 ### 2. Install Dependencies
 

@@ -1,33 +1,52 @@
 # Database Services Architecture
 
-This document explains the new clean database architecture for reusable database connections across pages.
+This document explains the clean database architecture for PostgreSQL connections and data management.
 
 ## Services Structure
 
-### 1. `dbFactory.ts` - General Database Factory
-- **Purpose**: Provides a singleton database service that can be reused across all pages
-- **Usage**: For general database queries and connection management
-- **Example**:
-```typescript
-import { queryDatabase, DatabaseServiceFactory } from '../services/dbFactory';
-
-// Simple query
-const data = await queryDatabase('SELECT * FROM my_table');
-
-// Advanced usage
-const db = DatabaseServiceFactory.getService();
-const result = await db.query('SELECT * FROM another_table');
-```
-
-### 2. `postgresDataService.ts` - PostgreSQL Data Service
+### 1. `postgresDataService.ts` - Main PostgreSQL Data Service
 - **Purpose**: Encapsulates all PostgreSQL database queries and operations
 - **Features**: 
-  - Single `loadAllData()` method for all Weekly Budget page data
-  - Individual methods for specific data types (farms, varieties, products, etc.)
-  - Generic `customQuery()` method for custom SQL queries on other pages
+  - `loadAllVariableData()` - Common data (farms, varieties, products)
+  - `loadAllWeeklyData()` - All weekly dashboard data with variable data
+  - `loadAllMonthlyData()` - All monthly dashboard data with variable data
+  - `customQuery()` - Generic method for custom SQL queries
   - Proper TypeScript types and error handling
-- **Usage**:
+  - DRY principles with no duplicate queries
+
+**Usage**:
 ```typescript
+import { PostgresDataService } from '../services/postgresDataService';
+
+const service = new PostgresDataService();
+
+// Load weekly data (includes variable data)
+const weeklyData = await service.loadAllWeeklyData();
+
+// Load monthly data (includes variable data)  
+const monthlyData = await service.loadAllMonthlyData();
+
+// Custom query for other pages
+const customData = await service.customQuery('SELECT * FROM my_custom_view');
+```
+
+### 2. `databaseService.ts` - Core Database Connection Service
+- **Purpose**: Handles low-level database connections and query execution
+- **Features**:
+  - HTTP-based PostgreSQL queries
+  - Connection management and error handling
+  - Generic query interface
+  - Type-safe query results
+
+**Usage**:
+```typescript
+import { DatabaseService } from '../services/databaseService';
+import { getConnection } from '../config/database';
+
+const connection = getConnection('postgres_views');
+const db = new DatabaseService(connection);
+const result = await db.query('SELECT * FROM my_table');
+```
 import { PostgresDataService } from '../services/postgresDataService';
 
 const service = new PostgresDataService();
